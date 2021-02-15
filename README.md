@@ -1,3 +1,3 @@
 # asteroids
 
-This is an asteroids game created in my programming course
+Asteroids video game in Java developed in RP4K programming enrichment course.
