@@ -32,16 +32,16 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
     boolean isPaused;
     int score;
     AudioClip laser, shipHit, asteroidHit, thruster;
-    float sizeDecrease = 0.6f;
-    float startingSize = 1.2f;
-    int asteroidNum;
+    float sizeDecrease = 0.6f; // decrease size when destroyed
+    float startingSize = 1.2f; // starting size of asteroid
+    int asteroidNum; // number of asteroids to add once an asteroid is destroyed
     boolean mainMenu = true;
-    int bulletCounter;
+    int bulletCounter; // how many bullets the ship has
     int bulletSet = 10;
-    int ammoSpawnCounter;
-    int ammoSpawnSet = 10;
+    int ammoSpawnCounter; // counter to time adding ammo packages to game
+    int ammoSpawnSet = 10; // controlls how oftern ammo is added to game
     boolean gameOver = false;
-    int ammoAmountSet = 10;
+    int ammoAmountSet = 10; // how many bullets in each ammo package
     
     public void init() {
         // TODO start asynchronous download of heavy resources
@@ -50,7 +50,7 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
         this.setSize(900,650);
         this.addKeyListener(this);
         
-        timer = new Timer(20,this);
+        timer = new Timer(20,this); // timer ticks every 20 milliseconds
         offscreen = createImage(this.getWidth(), this.getHeight());
         offG = offscreen.getGraphics();
     }
@@ -63,34 +63,34 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
         timer.stop();
     }
     
-    public void actionPerformed(ActionEvent e){
+    public void actionPerformed(ActionEvent e){ // timer ticks
         if(!mainMenu){
-            respawnShip();
-            keyCheck();
+            respawnShip(); // checks if ship ship should be respawned
+            keyCheck(); // checks which keys are pressed and performs the appropriate action
             ship.updatePosition();
             for(int i = 0; i < asteroidList.size(); i++){
                 //asteroidList.get(i).prevX = asteroidList.get(i).xPosition;
                 //asteroidList.get(i).prevY = asteroidList.get(i).yPosition;
-                asteroidList.get(i).updatePosition();
+                asteroidList.get(i).updatePosition(); // updates all asteroids position
             }
             for(int i = 0; i < bulletList.size(); i++){
-                bulletList.get(i).updatePosition();
+                bulletList.get(i).updatePosition(); // updates all bullets position
                 if (bulletList.get(i).counter > 60 || !bulletList.get(i).active){
-                    bulletList.remove(i);
+                    bulletList.remove(i); // removes bullets that aren't needed
                 }
             }
             for(int i = 0; i < debrisList.size(); i++){
                 debrisList.get(i).updatePosition();
                 if (debrisList.get(i).counter > 30){
-                    debrisList.remove(i);
+                    debrisList.remove(i); // removes debris after 30 ticks
                 }
             }
             for(int i = 0; i < ammoList.size(); i++){
-                ammoList.get(i).updatePosition();
+                ammoList.get(i).updatePosition(); // updates ammo position
             }
-            checkCollision();
-            checkAsteroidDestruction();
-            checkAddAmmo();
+            checkCollision(); // checks if any objects collided with other objects
+            checkAsteroidDestruction(); // updates score for asteroid destruction, adds smaller asteroids
+            checkAddAmmo(); // checks if more ammo should be added and adds it
         }
         else{
             keyCheck();
@@ -98,7 +98,7 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
         
     }
     
-    public void paint(Graphics g) {
+    public void paint(Graphics g) { // prints all things to screen
         offG.setColor(Color.black);
         offG.fillRect(0, 0, 900, 600);
         offG.setColor(Color.white);
@@ -172,7 +172,7 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
         paint(g);
     }
     
-    public void keyPressed(KeyEvent e){
+    public void keyPressed(KeyEvent e){ // checks key presses
         if(!mainMenu){
             if (e.getKeyCode() == KeyEvent.VK_RIGHT){
                 rightKey = true;
@@ -206,7 +206,7 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
         }
     }
     
-    public void keyReleased(KeyEvent e){
+    public void keyReleased(KeyEvent e){ // checks key releases
         if (e.getKeyCode() == KeyEvent.VK_RIGHT){
             rightKey = false;
         }
@@ -235,7 +235,7 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
         
     }
     
-    public void keyCheck(){
+    public void keyCheck(){ // reacts to key presses
         if (leftKey){ // == true
             ship.rotateLeft();
         }
@@ -278,7 +278,7 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
         }
     }
     
-    public boolean collision(VectorSprite a, VectorSprite b){
+    public boolean collision(VectorSprite a, VectorSprite b){ // checks if two vector sprites collided
         int x, y;
         for(int i = 0; i < a.drawShape.npoints; i++){
             x = a.drawShape.xpoints[i];
