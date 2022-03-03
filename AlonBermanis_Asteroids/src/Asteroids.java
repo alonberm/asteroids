@@ -298,13 +298,13 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
     }
     
     public void checkCollision(){
-        for(int i = 0; i < asteroidList.size(); i++){
+        for(int i = 0; i < asteroidList.size(); i++){ // checks if ship hit an asteroid
             if (collision(ship, asteroidList.get(i)) == true && ship.active){
                 ship.hit();
                 score -= 20;
                 shipHit.play();
             }
-            for (int j = 0; j < bulletList.size(); j++){
+            for (int j = 0; j < bulletList.size(); j++){ // bullet hit an asteroid
                 if (collision(bulletList.get(j), asteroidList.get(i)) == true){
                     bulletList.get(j).active = false;
                     asteroidList.get(i).active = false;
@@ -314,7 +314,7 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
                     asteroidHit.play();
                 }
             }
-            for (int j = 0; j < asteroidList.size(); j++){
+            for (int j = 0; j < asteroidList.size(); j++){ // checks if asteroid hit asteroid
                 if(i == j && j != asteroidList.size() - 1){
                     j++;
                 }
@@ -337,7 +337,7 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
                 }
             }
             
-            for (int j = 0; j < ammoList.size(); j++){
+            for (int j = 0; j < ammoList.size(); j++){ // check if asteroid hit ammo
                 if (collision(asteroidList.get(i), ammoList.get(j)) && asteroidList.get(i).active && ammoList.get(j).active){                       
                     bounce(asteroidList.get(i), ammoList.get(j)/*, asteroidList.get(i).prevX, asteroidList.get(i).prevY, asteroidList.get(j).prevX, asteroidList.get(j).prevY*/);
                     //bounce(asteroidList.get(j), asteroidList.get(j).prevX, asteroidList.get(j).prevY);
@@ -352,7 +352,7 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
             
             
         } 
-        for (int i = 0; i < ammoList.size(); i++){
+        for (int i = 0; i < ammoList.size(); i++){ // checks if ammo hit ammo
             for (int j = 0; j < ammoList.size(); j++){
                 if(i == j && j != ammoList.size() - 1){
                     j++;
@@ -370,20 +370,20 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
                     }
                 }
             }
-            if (collision(ammoList.get(i), ship) && ship.active){
+            if (collision(ammoList.get(i), ship) && ship.active){ // checks if ship hit ammo
                 ammoCollision(i);
                 i = ammoList.size();
             }
         }
     }
     
-    public void respawnShip(){
+    public void respawnShip(){ // checks if ship should respawn
         if(!ship.active && ship.counter > 100 && canWeSpawn() && ship.livesCounter > 0){
             ship.reset();
         }
     }
     
-    public boolean canWeSpawn(){
+    public boolean canWeSpawn(){ // makes sure ship isn't respawning on any asteroids
         double x, y, h;
         for(int i = 0; i < asteroidList.size(); i++){
             x = asteroidList.get(i).xPosition - 450;
@@ -396,7 +396,7 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
         return true;
     }
     
-    public void fire(){
+    public void fire(){ // fires a bullet
         if(ship.counter > 50 && ship.active && bulletCounter > 0){
             bulletList.add(new Bullet(ship.drawShape.xpoints[0], ship.drawShape.ypoints[0], ship.angle));
             ship.counter = 0;
@@ -409,12 +409,12 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
     }
     
     public void checkAsteroidDestruction(){
-        asteroidNum = (int) Math.round(Math.random() * 2) + 1;
+        asteroidNum = (int) Math.round(Math.random() * 2) + 1; // [1,3]
         int asteroidLocation;
         for(int i = 0; i < asteroidList.size(); i++){            
             if(!asteroidList.get(i).active){
                 if(asteroidList.get(i).size > 1){
-                    for(int j = 0; j < asteroidNum; j++){
+                    for(int j = 0; j < asteroidNum; j++){ // adds asteroidNum smaller asteroids
                         if(Math.random() < 0.5){
                             asteroidLocation = (int) Math.round(Math.random() * 10);
                         }
@@ -424,6 +424,7 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
                         asteroidList.add(new Asteroid(asteroidList.get(i).xPosition + asteroidLocation, asteroidList.get(i).yPosition + asteroidLocation, asteroidList.get(i).size - sizeDecrease));
                     }
                 }            
+                // add points for destroying asteroid
                 if(asteroidList.get(i).size == startingSize){
                     score += 20;
                 }
@@ -442,6 +443,7 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
     }
     
     public void restartGame(){
+        // resets game for new play
         ship.reset();
         ship.livesCounter = 3;
         score = 0;
@@ -452,7 +454,7 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
         gameOver = false;
     }
     
-    public void startGame(){       
+    public void startGame(){  // initialize everything
         ship = new SpaceCraft();
         bulletCounter = bulletSet;
         asteroidList = new ArrayList();
@@ -468,10 +470,10 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
     
     public void initializeAsteroid(){
         double x, y, h;
-        asteroidNum = (int) Math.round(Math.random() * 10) + 5;
+        asteroidNum = (int) Math.round(Math.random() * 10) + 5; //[5,15]
         for(int i = 0; i < asteroidNum; i++){
             asteroidList.add(new Asteroid(startingSize));
-            for(int j = 0; j < asteroidList.size(); j++){
+            for(int j = 0; j < asteroidList.size(); j++){ // makes sure asteroids aren't added on top of each other
                 if(i == j && j != asteroidList.size() - 1){ //to make sure that i and j are not equal
                     j++;// if they are, j is increased to next one
                 }
@@ -489,11 +491,11 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
         } 
     }
     
-    public void checkAddAmmo(){
+    public void checkAddAmmo(){ // checks if more ammo should be added and adds it
         if (ammoSpawnCounter <= 0 && !gameOver){
             double x, y, h;
             ammoList.add(new Ammo());
-            for(int i = 0; i < ammoList.size()-1; i++){
+            for(int i = 0; i < ammoList.size()-1; i++){ // ensures ammo packages don't spawn on top of each other
                 x = ammoList.get(i).xPosition - ammoList.get(ammoList.size() - 1).xPosition;
                 y = ammoList.get(i).yPosition - ammoList.get(ammoList.size() - 1).yPosition;
                 h = Math.sqrt(x*x + y*y);
@@ -503,7 +505,7 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
                     break;
                 }
             }
-            for(int i = 0; i < asteroidList.size(); i++){
+            for(int i = 0; i < asteroidList.size(); i++){ // ensures ammo packages don't spwawn on top of asteroid
                 x = asteroidList.get(i).xPosition - ammoList.get(ammoList.size() - 1).xPosition;
                 y = asteroidList.get(i).yPosition - ammoList.get(ammoList.size() - 1).yPosition;
                 h = Math.sqrt(x*x + y*y);
@@ -522,12 +524,12 @@ public class Asteroids extends Applet implements KeyListener, ActionListener{
         }
     }
     
-    public void ammoCollision(int i){
+    public void ammoCollision(int i){ // adds bullets if ammo was obtained
         bulletCounter += ammoAmountSet;
         ammoList.remove(i);
     }
     
-    public void bounce(VectorSprite a, VectorSprite b/*, double x1, double y1, double x2, double y2*/){
+    public void bounce(VectorSprite a, VectorSprite b/*, double x1, double y1, double x2, double y2*/){ // bounces 2 vectorsprites. still a bit buggy
         a.rotation = 0;
         b.rotation = 0;
         if((a.xSpeed > 0 && b.xSpeed < 0) || (a.xSpeed < 0 && b.xSpeed > 0)){
